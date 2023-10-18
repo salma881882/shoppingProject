@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+     {% if category %}
+         {{category.description|truncatewords:200}}
+     {% else %}
+         Welcome to ABC where you can but everything.........
+     {% endif %}
+{% endblock %}
+
+
+{% block title %}
+    {% if category %}
+          {{ category.name }} -ABC
+
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if category %}
+<div>
+    <div class="row my_row_class">
+        <div class="mx-auto">
+        <p class="text-justify my_tit"><a href="{% url 'shop:allProdCat' %}">our product collection</a> </p>
+        </div>
+    </div>
+</div>
+    {% endif %}
+<div class="mx_auto">
+    {% if category.image %}
+    <img class="my_image" src="{{ category.image.url }}" alt="{{category.name}}" style="height:500px; width:2000px">
+
+</div>
+<br>
+<div>
+    <h1 class="text-center text-justify my_title">{{ category.name }}</h1>
+    <p class="text-center text-justify">{{ category.description }}</p>
+</div>
+<hr>
+    {% else %}
+<div>
+<img class="my_image my_image_padding" src="{% static 'img/banner.png' %}" alt="our products" style="height:500px; width:2000px">
+</div>
+<br>
+<div>
+    <h1 class="text-center my_title">our product collection</h1>
+
+    <p class="text-justify text-center">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting</p>
+
+
+</div>
+    {% endif %}
+<div class="container">
+    <div class="row mx_auto">
+        {% for product in products.object_list %}
+        <div class="my_bottom_margin col-9 col-sm-12  col-md-4 col-lg-4">
+            <div class="card text-center" style="min-width:18rem; ">
+            <a href="{{ product.get_url }}"><img class="card-img-top my_image" src="{{ product.image.url }}" alt="{{ product.name }}" style="height:600px; width:300px;"></a>
+                <div class="card-body">
+                <h4>{{ product.name }}</h4>
+                <P>{{ product.price }}</P>
+                    <a  class="btn btn-success" href="">Buy Now</a>
+             <a  class="btn btn-warning" href="{% url 'cart:add_cart' product.id %}"><i class="fa fa-shopping-cart"></i> </a>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="mx-auto">
+        {% if products.paginator.num_pages > 1 %}
+
+        <hr>
+        <div class="text-center">
+            {% for pg in products.paginator.page_range %}
+               <a href="?page={{ pg }}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{ pg }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <br>
+</div>
+{% endblock %}
